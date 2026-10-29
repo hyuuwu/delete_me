@@ -15,38 +15,29 @@ else:
 
 
 def delete_files_lol(dir_path, num_to_delete=5):
-    try:
-        allitems = os.listdir(dir_path)
-    except FileNotFoundError:
-        print(f"i didnt find it. sorry? try not to use {dir_path}")
-        return
-    except PermissionError:
-        print(f"do you have {dir_path}'s permission? i think not.")
-        return
 
-    files = [
-        item for item in allitems
-        if os.path.isfile(os.path.join(dir_path, item))
-    ]
+    files = []
+    for root, dirs, filenames in os.walk(dir_path):
+        for f in filenames:
+            files.append(os.path.join(root, f))
 
     totalfilez = len(files)
     print(f"ooh, found {totalfilez} files!")
 
     if totalfilez == 0:
         print("cant.")
-        return
+        sys.exit(0)
     num_to_delete = min(num_to_delete, totalfilez)
 
     files_to_delete = random.sample(files, num_to_delete)
 
     print(f"you lost. sorry, will delete {num_to_delete} files.")        
-    for file_name in files_to_delete:
-        file_path = os.path.join(dir_path, file_name)
+    for file_path in files_to_delete:
         try:
             os.remove(file_path)
-            print(f"deleted {file_name} >:3")
+            print(f"deleted {file_path} >:3")
         except OSError as e:
-            print(f"failed to delete {file_name}, {e.strerror}")
+            print(f"failed to delete {file_path}, {e.strerror}")
     sys.exit(0)
 
 
